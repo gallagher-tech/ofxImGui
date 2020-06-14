@@ -72,7 +72,7 @@ bool ofxImGui::BeginWindow( const std::string& name, Settings& settings, bool co
 	ImGui::SetNextWindowPos( settings.windowPos, settings.lockPosition ? ImGuiCond_Always : ImGuiCond_Appearing );
 	ImGui::SetNextWindowSize( settings.windowSize, ImGuiCond_Appearing );
 	// ImGui::SetNextWindowCollapsed( collapse, ImGuiCond_Appearing );
-	return ImGui::Begin( name.c_str(), open, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize | ( collapse ? 0 : ImGuiWindowFlags_NoCollapse ) );
+	return ImGui::Begin( name.c_str(), open, ImGuiWindowFlags_NoSavedSettings  | ( collapse ? 0 : ImGuiWindowFlags_NoCollapse ) );
 }
 
 //--------------------------------------------------------------
@@ -254,7 +254,13 @@ void ofxImGui::AddGroup( ofParameterGroup& group, Settings& settings, ofxImGui::
 			if ( success ) continue;
 		}
 
-		ofLogWarning( __FUNCTION__ ) << "Could not create GUI element for parameter " << parameter->getName();
+		// catch all string display:
+		//ofLogWarning( __FUNCTION__ ) << "Could not create GUI element for parameter " << parameter->getName();
+		std::stringstream ss;
+		ss	<< "No imgui() display for parameter [" << parameter->getName() << "] of type <" << parameter->type() << ">\n"
+			<< parameter->toString();
+
+		ImGui::TextWrapped( ss.str().c_str() );
 	}
 
 	if ( settings.windowBlock && !prevWindowBlock ) {
