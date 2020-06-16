@@ -72,7 +72,7 @@ bool ofxImGui::BeginWindow( const std::string& name, Settings& settings, bool co
 	ImGui::SetNextWindowPos( settings.windowPos, settings.lockPosition ? ImGuiCond_Always : ImGuiCond_Appearing );
 	ImGui::SetNextWindowSize( settings.windowSize, ImGuiCond_Appearing );
 	// ImGui::SetNextWindowCollapsed( collapse, ImGuiCond_Appearing );
-	return ImGui::Begin( name.c_str(), open, ImGuiWindowFlags_NoSavedSettings  | ( collapse ? 0 : ImGuiWindowFlags_NoCollapse ) );
+	return ImGui::Begin( name.c_str(), open, ImGuiWindowFlags_NoSavedSettings | ( collapse ? 0 : ImGuiWindowFlags_NoCollapse ) );
 }
 
 //--------------------------------------------------------------
@@ -106,7 +106,8 @@ void ofxImGui::EndWindow( Settings& settings )
 
 	settings.windowPos  = ImGui::GetWindowPos();
 	settings.windowSize = ImGui::GetWindowSize();
-	settings.mouseOverGui |= ImGui::IsWindowHovered( ImGuiHoveredFlags_AnyWindow );
+	//settings.mouseOverGui |= ImGui::IsWindowHovered( ImGuiHoveredFlags_AnyWindow );
+	settings.mouseOverGui = ImGui::IsWindowHovered();// ImGuiHoveredFlags_AnyWindow );
 	ImGui::End();
 
 	// Unlink the referenced ofParameter.
@@ -257,8 +258,8 @@ void ofxImGui::AddGroup( ofParameterGroup& group, Settings& settings, ofxImGui::
 		// catch all string display:
 		//ofLogWarning( __FUNCTION__ ) << "Could not create GUI element for parameter " << parameter->getName();
 		std::stringstream ss;
-		ss	<< "No imgui() display for parameter [" << parameter->getName() << "] of type <" << parameter->type() << ">\n"
-			<< parameter->toString();
+		ss << "No imgui() display for parameter [" << parameter->getName() << "] of type <" << parameter->type() << ">\n"
+		   << parameter->toString();
 
 		ImGui::TextWrapped( ss.str().c_str() );
 	}
